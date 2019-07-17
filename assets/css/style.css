@@ -1,0 +1,107 @@
+html {
+  height: 100%; 
+}
+
+body {
+  height: 100%;
+}
+
+
+.container-fluid {
+  height: 100%;
+  /* background-image: url("../images/background-gif1.gif"); */
+  background-size: cover;
+  overflow: auto;
+}
+
+/* Navbar */
+/* .row-navbar {
+  border: 1px solid yellow;
+
+} */
+
+.navbar {
+  padding: 0;
+  justify-content: space-between;
+  color: #fff; /* This changed the font color of navbar-brand... */
+  border-bottom: 2px solid #ddd;
+  /* Modifying height messes up with toggler */
+  /* height: 90px;  */  
+}
+
+#navbarTogglerDemo02 {
+  flex-grow: 0;
+}
+
+.navbar-brand {
+  background-color: #4aaaa5;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top: 15px;
+  height: 84px;
+  font-size: 30px;
+}
+
+
+.collapse {
+  padding: 10px;  
+}
+
+.navbar-toggler {
+  width: 70px;
+  height: 70px;
+  margin-right: 10px;
+}
+
+.navbar-nav {
+  padding: 10px; 
+}
+
+/* Jumbotron */
+.row-jumbotron {
+  border: 1px solid red;
+  margin-top: 100px;
+}
+
+.container-jumbotron-title {
+  border: 1px solid teal;
+  text-align: center;
+}
+
+.jumbotron-fluid {
+  border: 1px solid blue;
+}
+
+/* form */
+.row-table-form {
+  margin-top: 20px;
+  margin-bottom: 100px;
+}
+
+/* table */
+
+thead {
+  font-weight: bold;
+}
+
+th {
+  font-weight: bold;
+}
+
+/* button */
+
+
+/* Footer */
+
+.footer {
+    background-color: #666666;
+    text-align: center;
+    border-top: 3px solid #4aaaa5;
+}
+
+.footer > p {
+    color: #fff;
+}
+
+
+

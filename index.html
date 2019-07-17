@@ -10,12 +10,12 @@
   <link rel="stylesheet" href="assets/css/reset.css">
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <!-- assets/css/style.css -->
+  <link rel="stylesheet" href="assets/css/style.css" type="text/css">
   <!-- Bootstrap Jquery / Popper / javascript -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  <!-- assets/css/style.css -->
-  <link rel="stylesheet" href="assets/css/style.css" type="text/css">
 
   <!-- firebase app/database-->
   <script src="https://www.gstatic.com/firebasejs/6.3.0/firebase-app.js"></script>
@@ -31,30 +31,132 @@
 <body>
   <div class="container-fluid">
 		<!-- nav bar -->
-		<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-      <a class="navbar-brand font-weight-bold text-reset" href="https://catnap89.github.io/Bootstrap-Portfolio/">Youngwoo Cho</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      
-      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-        <ul class="navbar-nav ml-auto mt-2 mt-lg-0"> <!-- Changing mr-auto to ml-auto positioned nav links to the right side-->
-          <li class="nav-item">
-            <a class="nav-link" href="https://catnap89.github.io/Bootstrap-Portfolio/">About <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="https://catnap89.github.io/Bootstrap-Portfolio/portfolio.html">Portfolio</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="https://catnap89.github.io/Bootstrap-Portfolio/contact.html">Contact</a>
-          </li>
-        </ul>
-      </div>			
-		</nav>
+    <div class="row row-navbar">
+      <div class="col-md-12">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+          <a class="navbar-brand font-weight-bold text-reset" href="https://catnap89.github.io/Bootstrap-Portfolio/">Youngwoo Cho</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav ml-auto mt-2 mt-lg-0"> <!-- Changing mr-auto to ml-auto positioned nav links to the right side-->
+              <li class="nav-item">
+                <a class="nav-link" href="https://catnap89.github.io/Bootstrap-Portfolio/">About <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://catnap89.github.io/Bootstrap-Portfolio/portfolio.html">Portfolio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://catnap89.github.io/Bootstrap-Portfolio/contact.html">Contact</a>
+              </li>
+            </ul>
+          </div>			
+        </nav>
+
+      </div>
+    </div>
 
     <!-- main content -->
     <!-- jumbotron -->
-    
+    <div class="row row-jumbotron">
+      <div class="col-md-8 offset-md-2">
+
+        <div class="jumbotron jumbotron-fluid">
+          <div class="container container-jumbotron-title">
+            <h1 class="display-4">Any Time Is Train Time</h1>
+            <p class="lead">choo choo chee chee</p>
+          </div>
+        </div>
+
+      </div>
+    </div> <!-- row end -->
+
+    <div class="row row-table-tschedule">
+      <div class="col-md-8 offset-md-2">
+
+        <div class="card">
+          <div class="card-header">
+            Current Train Schedule
+          </div>
+          <!-- <div class="card-body"> -->
+            <!-- mobile responsive div containing table -->
+            <div class="table-responsive">
+
+              <table class="table table-hover table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">Train Name</th>
+                    <th scope="col">Destination</th>
+                    <th scope="col">Frequency (min)</th>
+                    <th scope="col">Next Arrival</th>
+                    <th scope="col">Minutes Away</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- display dynamically created table with data retrieved from firebase -->
+                   <!-- <tr>
+                    <th scope="row">Train Name</th>
+                    <td>Destination</td>
+                    <td>Frequency (min)</td>
+                    <td>Next Arrival</td>
+                    <td>Minutes Away</td>
+                  </tr> -->
+                </tbody>
+              </table>
+
+            </div>
+
+          <!-- </div> -->
+        </div>
+
+      </div>
+    </div> <!-- row end -->
+
+    <div class="row row-table-form">
+      <div class="col-md-8 offset-md-2">
+
+        <div class="card">
+          <div class="card-header">
+            Add Train Info
+          </div>
+          <!-- * Train Name  * Destination * First Train Time -- in military time * Frequency -- in minutes -->
+          <form class="needs-validation" novalidate>
+            <div class="form-group row font-weight-bold mt-3 ml-3 mr-3">
+                <label for="name-input" class="col-12 col-form-label">Train Name</label>
+                <div class="col-12">
+                    <input class="form-control" type="name" placeholder="" id="train-name-input">
+                </div>
+            </div>
+            <div class="form-group row font-weight-bold ml-3 mr-3">
+                <label for="inputCity" class="col-12 col-form-label">Destination</label>
+                <div class="col-12">
+                    <input class="form-control" type="text" placeholder="City" id="destination-input">
+                </div>
+            </div>
+            <div class="form-group row font-weight-bold ml-3 mr-3">
+                <label for="time-input" class="col-12 col-form-label">First Train Time</label>
+                <div class="col-12">
+                    <input class="form-control" type="time" placeholder="HH:mm - military time" id="time-input">
+                </div>
+            </div>
+            <div class="form-group row font-weight-bold ml-3 mr-3">
+                <label for= "train-frequency-input" class="col-12 col-form-label">Frequency (min)</label>
+                <div class="col-12">
+                    <input class="form-control" type="number" placeholder="min" id="frequency-input">
+                </div>
+            </div>
+            <div class="form-group row ml-3 mr-3">
+                <div class="col-12 d-flex justify-content-end">
+                    <button id="submit" type="button" class="btn btn-primary btn-sm">Submit</button> 
+                </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
 
 
 		<div class="row fixed-bottom">

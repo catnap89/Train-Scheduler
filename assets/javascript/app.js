@@ -22,10 +22,10 @@ Psuedo Coding
     `  
     append to train-table tbody
 
-# Form Input
-  ## On click submit button
-    * get the value of the form: $("#id").val().trim();
-    * push the value to firebase database: database.ref().push({});
+# Form Input -- DONE
+  ## On click submit button -- CHECK
+    * get the value of the form: $("#id").val().trim(); -- CHECK
+    * push the value to firebase database: database.ref().push({});  -- CHECK
 
 # On child_added, 
   * snapshot = a picture of data at a particular database reference at a single point in time
@@ -64,4 +64,53 @@ firebase.initializeApp(firebaseConfig);
 // declare database variable as database in firebase
 let database = firebase.database();
 
+// on click function when submit button is clicked: get value from the form and push it to firebase database's user reference
+$('#submit').on("click", function(event) {
+  event.preventDefault();
 
+  var trainName = $('#train-name-input').val().trim();
+  var destination = $('#destination-input').val().trim();
+  var firstTrainTime = $('#time-input').val().trim();
+  var frequency = $('#frequency-input').val().trim();
+  // push the value of the form to firebase database
+  database.ref("/user").push({
+    train: trainName,
+    destination: destination,
+    firstTime: firstTrainTime,
+    frequency: frequency,
+    dataAdded: firebase.database.ServerValue.TIMESTAMP,
+  });
+});
+
+// Firebase watcher .on("child_added")
+database.ref("/user").on("child_added", function(snapshot) {
+  var sv = snapshot.val();
+  console.log(sv);
+
+  var nextArrival = trainArrival(sv.firstTime);
+  renderTable(sv, nextArrival);
+
+}, function (errorObject) {
+  console.log("The read failed: " + errorObject.code)
+});
+
+// dynamically display table with the parameter used.
+function renderTable(sv, nextArrival) {
+
+  $('#train-table tbody').append(`
+  <tr>
+    <td>${sv.train}</td>
+    <td>${sv.destination}</td>
+    <td>${sv.firstTime}</td>
+    <td>${sv.frequency}</td>
+    <td>${nextArrival}</td>
+    <td>${minutesAway}</td>
+  </tr>
+`);
+
+}
+
+// moment.js to calculate next arrival time of the train.
+function trainArrival() {
+
+}

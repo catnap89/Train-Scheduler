@@ -86,26 +86,24 @@ $('#submit').on("click", function(event) {
 database.ref("/user").on("child_added", function(snapshot) {
   var sv = snapshot.val();
   console.log(sv);
-  // var frequency = sv.frequency;
+  var frequency = parseInt(sv.frequency);
 
-  var nextArrival = trainArrival(sv.firstTime, sv.frequency);
-  // var minutesAway = minAway(sv.firstTime)
-  // display table when pused to firebase database
-  // trainArrival(sv.firstTime, sv.frequency);
-  renderTable(sv, nextArrival);
+  var nextArrival = trainArrival(sv.firstTime, frequency);
+
+  renderTable(sv, nextArrival, frequency);
 
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code)
 });
 
 // dynamically display table with the parameter used.
-function renderTable(sv, nextArrival) {
+function renderTable(sv, nextArrival, frequency) {
 
   $('#train-table tbody').append(`
   <tr>
     <td>${sv.train}</td>
     <td>${sv.destination}</td>
-    <td>${sv.frequency}</td>
+    <td>${frequency}</td>
     <td>${nextArrival}</td>
     
     
@@ -119,11 +117,11 @@ function renderTable(sv, nextArrival) {
 // Convert current time into unix millisecond timestamp
 // convert frequency into millisecond.
 // while A < B, A += C until A is no longer less than B.
-// if A < B && A === B, A+=C
+// if A < B || A === B, A+=C
 // if? while? for? first Train time is before current time, add frequency till the train time is after current time and display it as a next train time.
 // Then it will always show the NEXT train time.
 
-
+//LETS CHANGE EVERY FORM VALUE INTO NUMBER?
 
 // var freq = moment(sv.frequency, 'mm').format("mm");
 // console.log("outside scope frequency: " + freq);
@@ -135,48 +133,89 @@ console.log(moment(1563559200833).format());
 var nowMilitaryTime = moment().format("HH mm ss A"); // current time in millitary time
 // console.log(nowMilitaryTime);
 
-//
+// WHY IS THIS ONLY ADDING FREQUENCY TO FIRST TRAIN TIME ONCE? 
 function trainArrival(firstTime, frequency) {
+
+  var freqNum = parseInt(frequency);
+  console.log("frequency Number: " + freqNum);
+
+  var freqMs = (freqNum * 60000);
+  console.log("Frequency in MS: " + freqMs)
   
+  // var freqUnixMs = moment(frequency, 'mm');
+  // console.log("frequencyUnixMs: " + freqUnixMs);
+
+  var ftUnixMs = moment(parseInt(firstTime), 'HH:mm');
+  console.log("First Train time in Ms: " + ftUnixMs);
+
+  var ctUnixMs = moment();
+  console.log("Current Time in Ms: " + ctUnixMs);
+
+  var ct = moment().format("HH:mm");
+  console.log("Current Time: " + ct);
+
+  var ft = moment(firstTime, 'HH:mm').format("HH:mm");
+  console.log("First Train Time: " + ft);
+
   var freq = moment(frequency, 'mm').format("mm");
   console.log("frequency: " + freq);
 
-  var freqUnixMs = moment(frequency, 'mm');
-  console.log("frequencyUnixMs: " + freqUnixMs);
 
-  var ft = moment(firstTime, 'HH:mm').format("HH:mm");
-  console.log("ft: " + ft);
+  // if (ftUnixMs < ctUnixMs || ftUnixMs === ctUnixMs) {
+    // var nextArrivalTime = moment(ftUnixMs += freqMs).format("HH:mm");
+    // console.log("Next ETA: " + nextArrivalTime);
+    // return nextArrivalTime;
+    
+    // return moment(ftUnixMs += freqMs).format("HH:mm");
+  
+  
+  // while (ftUnixMs <= ctUnixMs) {
+  //   // var nextETA = ftUnixMs
+  //   nextETA += freqMs;
+    
+  //   console.log("Next ETA: " + nextETA);
+  //   console.log("Next ETA in Time format: " + moment(nextETA).format("HH:mm"));
+  //   return moment(nextETA).format("hh:mm A");
+  // }
+  var nextETA = ftUnixMs
+  while (nextETA + freqMs <= ctUnixMs) { 
+    nextETA += freqMs;
+    console.log("Next ETA: " + nextETA);
+    console.log("Next ETA in Time format: " + moment(nextETA).format("HH:mm"));
+    return moment(nextETA).format("hh:mm A");
 
-  var ftUnix = moment(firstTime, 'HH:mm');
-  console.log("ft Unix: " + ftUnix);
-
-  var ctUnix = moment();
-  console.log(ctUnix);
-
-  var ct = moment().format("HH:mm");
-  console.log(ct);
-
-  var minCal = ftUnix - ctUnix;
-  console.log("minCal: " + minCal);
-
-  // var calMin = moment(minCal, 'HH:mm').format("HH:mm");
-  // console.log("Min Away: " + calMin);
-
-  while (ftUnix < ctUnix) {
-    ftUnix += freqUnixMs;
-    // ftUnix.add(freqUnixMs).format("HH:mm");
-    return;
   }
+
+
+  // let delta = ct - ft; 
+  // console.log("delta: " + delta);
+  // while ()
+
+}
+
+
+  
+
+  // let delta = currentTime- firstTime; // min
+  // while (delta - frequency > 0) {
+    
+  //   delta  = delta - frequency
+
+  // }
+
+  // delta will be equal to a number less than then frequency at the end and that should be the time to the next train
+
+
 
   // trainArrival();
 
-  var minLeft = ftUnix.diff(ctUnix, "hours") + ' hrs, ' + (ftUnix.diff(ctUnix, "minutes") % 60) + ' mins'
-  console.log("Min Away: " + minLeft);
+  // var minLeft = ftUnixMs.diff(ctUnixMs, "hours") + ' hrs, ' + (ftUnixMs.diff(ctUnixMs, "minutes") % 60) + ' mins'
+  // console.log("Min Away: " + minLeft);
 
-  var nextETA = moment(firstTime, 'HH:mm').add(frequency, 'minutes').format("HH:mm");
-  console.log("next ETA: " + nextETA);
+  // var nextETA = moment(firstTime, 'HH:mm').add(frequency, 'minutes').format("HH:mm");
+  // console.log("next ETA: " + nextETA);
 
-}
+
 
 // var getTimeLeft = function() {
 //   var now = moment();

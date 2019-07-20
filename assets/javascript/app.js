@@ -70,7 +70,9 @@ $('#submit').on("click", function(event) {
 
   var trainName = $('#train-name-input').val().trim();
   var destination = $('#destination-input').val().trim();
-  var firstTrainTime = $('#time-input').val().trim();
+  // change the time input string value as moment.js time format (milliseconds from unix epoch without years)
+  var firstTrainTime = moment($('#time-input').val().trim(), "HH:mm").subtract(10, "years").format("X");
+  console.log("THISISfirstTrainTime: " + firstTrainTime);
   var frequency = $('#frequency-input').val().trim();
   // push the value of the form to firebase database
   database.ref("/user").push({
@@ -82,29 +84,41 @@ $('#submit').on("click", function(event) {
   });
 });
 
+
+
+
+
 // Firebase watcher .on("child_added")
 database.ref("/user").on("child_added", function(snapshot) {
   var sv = snapshot.val();
   console.log(sv);
-  var frequency = parseInt(sv.frequency);
+  var name = sv.train;
+  console.log("train: " + name);
+  var destination = sv.destination;
+  console.log("destination: " + destination);
+  var firstTime = sv.firstTime;
+  console.log("firstTime String: " + firstTime);
+  var frequency = sv.frequency;
+  console.log("frequency String: " + frequency);
 
-  var nextArrival = trainArrival(sv.firstTime, frequency);
+  var nextArrival = trainArrival(firstTime, frequency);
 
-  renderTable(sv, nextArrival, frequency);
+  renderTable(name, destination, );
 
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code)
 });
 
 // dynamically display table with the parameter used.
-function renderTable(sv, nextArrival, frequency) {
+// IT DOES NOT SEEM LIKE I NEED TO WIRTE PARAMETER INSIDE THE FUNCTION'S PARENTHESIS FOR NAME?
+// Is it because name was the only parameter? The code was broken once I try to include destination and other parameters.
+function renderTable(name, destination, ) {
 
   $('#train-table tbody').append(`
   <tr>
-    <td>${sv.train}</td>
-    <td>${sv.destination}</td>
-    <td>${frequency}</td>
-    <td>${nextArrival}</td>
+    <td>${name}</td>
+    <td>${destination}</td>
+    
     
     
   </tr>
@@ -136,15 +150,12 @@ var nowMilitaryTime = moment().format("HH mm ss A"); // current time in millitar
 // WHY IS THIS ONLY ADDING FREQUENCY TO FIRST TRAIN TIME ONCE? 
 function trainArrival(firstTime, frequency) {
 
-  var freqNum = parseInt(frequency);
+  var freqNum = frequency;
   console.log("frequency Number: " + freqNum);
 
   var freqMs = (freqNum * 60000);
   console.log("Frequency in MS: " + freqMs)
   
-  // var freqUnixMs = moment(frequency, 'mm');
-  // console.log("frequencyUnixMs: " + freqUnixMs);
-
   var ftUnixMs = moment(parseInt(firstTime), 'HH:mm');
   console.log("First Train time in Ms: " + ftUnixMs);
 

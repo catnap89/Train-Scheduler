@@ -48,6 +48,107 @@ Psuedo Coding
 */
 
 
+// Your web app's Firebase configuration
+var firebaseConfig = {
+  apiKey: "AIzaSyBhzeruTvl8oo5ZCK8rORRvplM1k9TACEs",
+  authDomain: "train-scheduler-b4346.firebaseapp.com",
+  databaseURL: "https://train-scheduler-b4346.firebaseio.com",
+  projectId: "train-scheduler-b4346",
+  storageBucket: "train-scheduler-b4346.appspot.com",
+  messagingSenderId: "626876163024",
+  appId: "1:626876163024:web:dd1b867e654cdc55"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+// declare database variable as database in firebase
+let database = firebase.database();
+
+// on click function when submit button is clicked: get value from the form and push it to firebase database's user reference
+$('#submit').on("click", function(event) {
+  event.preventDefault();
+
+  var trainName = $('#train-name-input').val().trim();
+  var destination = $('#destination-input').val().trim();
+  // change the time input string value as moment.js time format (milliseconds from unix epoch without years)
+  var firstTrainTime = moment($('#time-input').val().trim(), "HH:mm").subtract(10, "years").format("X");
+  var frequency = $('#frequency-input').val().trim();
+  // push the value of the form to firebase database
+  database.ref("/user").push({
+    train: trainName,
+    destination: destination,
+    firstTime: firstTrainTime,
+    frequency: frequency,
+    dataAdded: firebase.database.ServerValue.TIMESTAMP,
+  });
+});
+
+// Firebase watcher .on("child_added")
+database.ref("/user").on("child_added", function(snapshot) {
+  var sv = snapshot.val();
+  console.log(sv);
+  var name = sv.train;
+  console.log("train: " + name);
+  var destination = sv.destination;
+  console.log("destination: " + destination);
+  var firstTime = sv.firstTime;
+  console.log("firstTime String: " + firstTime);
+  var frequency = sv.frequency;
+  console.log("frequency String: " + frequency);
+
+  var result = trainArrival(firstTime, frequency);
+  var minuteAway = result.tMinutes;
+  var nextArrival = result.tArrival;
+
+  renderTable(name, destination, nextArrival, frequency, minuteAway);
+
+}, function (errorObject) {
+  console.log("The read failed: " + errorObject.code)
+});
+
+// IT DOES NOT SEEM LIKE I NEED TO WIRTE PARAMETER INSIDE THE FUNCTION'S PARENTHESIS FOR NAME?
+// Is it because name was the only parameter? The code was broken once I try to include destination and other parameters.
+function renderTable(name, destination, nextArrival, frequency, minuteAway) {
+
+  $('#train-table tbody').append(`
+  <tr>
+    <td>${name}</td>
+    <td>${destination}</td>
+    <td>${frequency}</td>
+    <td>${nextArrival}</td>
+    <td>${minuteAway}</td>
+  </tr>
+`);
+
+}
+// var nowMilitaryTime = moment().format("HH mm ss A"); // current time in millitary time
+
+// WHY IS THIS ONLY ADDING FREQUENCY TO FIRST TRAIN TIME ONCE? 
+function trainArrival(firstTime, frequency) {
+
+    // Calculate the minutes until arrival using hardcore math
+    // To calculate the minutes till arrival, take the current time in unix subtract the FirstTrain time
+    // and find the modulus between the difference and the frequency.
+    var timeArr = firstTime.split(":");
+    var trainTime = moment()
+    .hours(timeArr[0])
+    .minutes(timeArr[1]);
+
+    // difference between current time (moment()) and trainTime in minutes 
+    var differenceTimes = moment().diff(trainTime, "minutes");
+    // the minutes away without the frequency
+    var tRemainder = differenceTimes % frequency;
+    tMinutes = frequency - tRemainder;
+    // To calculate the arrival time, add the tMinutes to the current time
+    var tArrival = moment()
+      .add(tMinutes, "m")
+      .format("hh:mm A");
+
+    return { tArrival, tMinutes }
+
+
+}
+
+/*
 
 // Your web app's Firebase configuration
 var firebaseConfig = {
@@ -103,7 +204,7 @@ database.ref("/user").on("child_added", function(snapshot) {
 
   var nextArrival = trainArrival(firstTime, frequency);
 
-  renderTable(name, destination, );
+  renderTable(name, destination, frequency, nextArrival);
 
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code)
@@ -112,12 +213,14 @@ database.ref("/user").on("child_added", function(snapshot) {
 // dynamically display table with the parameter used.
 // IT DOES NOT SEEM LIKE I NEED TO WIRTE PARAMETER INSIDE THE FUNCTION'S PARENTHESIS FOR NAME?
 // Is it because name was the only parameter? The code was broken once I try to include destination and other parameters.
-function renderTable(name, destination, ) {
+function renderTable(name, destination, frequency, nextArrival ) {
 
   $('#train-table tbody').append(`
   <tr>
     <td>${name}</td>
     <td>${destination}</td>
+    <td>${frequency}</td>
+    <td>${nextArrival}</td>
     
     
     
@@ -137,39 +240,56 @@ function renderTable(name, destination, ) {
 
 //LETS CHANGE EVERY FORM VALUE INTO NUMBER?
 
-// var freq = moment(sv.frequency, 'mm').format("mm");
-// console.log("outside scope frequency: " + freq);
-
-
-console.log(moment(1563559200833).format());
-
-
-var nowMilitaryTime = moment().format("HH mm ss A"); // current time in millitary time
-// console.log(nowMilitaryTime);
 
 // WHY IS THIS ONLY ADDING FREQUENCY TO FIRST TRAIN TIME ONCE? 
 function trainArrival(firstTime, frequency) {
 
-  var freqNum = frequency;
-  console.log("frequency Number: " + freqNum);
 
-  var freqMs = (freqNum * 60000);
-  console.log("Frequency in MS: " + freqMs)
+
+}
+
+
+
+
+  // var now = moment().subtract(10, "years").format("X");
+  // console.log("Now: " + now);
+  // var delta = now - firstTime;
+  // console.log("delta: " + delta);
+  // while (delta - frequency > 0) {
+  //   delta = delta - frequency;
+  //   var eta = moment([now + delta], "HH:mm").format("hh:mm A");
+  //   console.log("ETA: " + eta);
+  //   return eta;
+  // }
+
+  // let delta = currentTime- firstTime; // min
+  // while (delta - frequency > 0) {
+    
+  //   delta  = delta - frequency
+
+  // }
+
+
+  // var freqNum = frequency;
+  // console.log("frequency Number: " + freqNum);
+
+  // var freqMs = (freqNum * 60000);
+  // console.log("Frequency in MS: " + freqMs)
   
-  var ftUnixMs = moment(parseInt(firstTime), 'HH:mm');
-  console.log("First Train time in Ms: " + ftUnixMs);
+  // var ftUnixMs = moment(parseInt(firstTime), 'HH:mm');
+  // console.log("First Train time in Ms: " + ftUnixMs);
 
-  var ctUnixMs = moment();
-  console.log("Current Time in Ms: " + ctUnixMs);
+  // var ctUnixMs = moment();
+  // console.log("Current Time in Ms: " + ctUnixMs);
 
-  var ct = moment().format("HH:mm");
-  console.log("Current Time: " + ct);
+  // var ct = moment().format("HH:mm");
+  // console.log("Current Time: " + ct);
 
-  var ft = moment(firstTime, 'HH:mm').format("HH:mm");
-  console.log("First Train Time: " + ft);
+  // var ft = moment(firstTime, 'HH:mm').format("HH:mm");
+  // console.log("First Train Time: " + ft);
 
-  var freq = moment(frequency, 'mm').format("mm");
-  console.log("frequency: " + freq);
+  // var freq = moment(frequency, 'mm').format("mm");
+  // console.log("frequency: " + freq);
 
 
   // if (ftUnixMs < ctUnixMs || ftUnixMs === ctUnixMs) {
@@ -180,29 +300,29 @@ function trainArrival(firstTime, frequency) {
     // return moment(ftUnixMs += freqMs).format("HH:mm");
   
   
-  // while (ftUnixMs <= ctUnixMs) {
-  //   // var nextETA = ftUnixMs
-  //   nextETA += freqMs;
+  // while (firstTrainTime <= currentTime) {
+  //   // var nextETA = firstTrainTime
+  //   nextETA += frequency;
     
   //   console.log("Next ETA: " + nextETA);
   //   console.log("Next ETA in Time format: " + moment(nextETA).format("HH:mm"));
   //   return moment(nextETA).format("hh:mm A");
   // }
-  var nextETA = ftUnixMs
-  while (nextETA + freqMs <= ctUnixMs) { 
-    nextETA += freqMs;
-    console.log("Next ETA: " + nextETA);
-    console.log("Next ETA in Time format: " + moment(nextETA).format("HH:mm"));
-    return moment(nextETA).format("hh:mm A");
+  // var nextETA = ftUnixMs
+  // while (nextETA + freqMs <= ctUnixMs) { 
+  //   nextETA += freqMs;
+  //   console.log("Next ETA: " + nextETA);
+  //   console.log("Next ETA in Time format: " + moment(nextETA).format("HH:mm"));
+  //   return moment(nextETA).format("hh:mm A");
 
-  }
+  
 
 
   // let delta = ct - ft; 
   // console.log("delta: " + delta);
   // while ()
 
-}
+
 
 
   
@@ -292,3 +412,4 @@ function trainArrival(firstTime, frequency) {
 //   console.log(eta);
 // }
 
+*/

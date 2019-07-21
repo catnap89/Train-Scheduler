@@ -1,6 +1,7 @@
 /*
 Psuedo Coding
 ===============
+
 # Form ID
   * train-name-input
   * destination-input
@@ -63,6 +64,18 @@ firebase.initializeApp(firebaseConfig);
 // declare database variable as database in firebase
 let database = firebase.database();
 
+// clock displaying current time 
+$(document).ready(function() {
+    var interval = setInterval(function() {
+      
+        var now = moment();
+        $('#time-part').html("Current Time: " + now.format('hh:mm:ss A'));
+
+    }, 100);
+    
+});
+
+
 // on click function when submit button is clicked: get value from the form and push it to firebase database's user reference
 $('#submit').on("click", function(event) {
   event.preventDefault();
@@ -70,20 +83,24 @@ $('#submit').on("click", function(event) {
   var trainName = $('#train-name-input').val().trim();
   var destination = $('#destination-input').val().trim();
   // change the time input string value as moment.js time format (milliseconds from unix epoch without years)
+  // why is it subtracting 10 years?
   var firstTrainTime = moment($('#time-input').val().trim(), "HH:mm").subtract(10, "years").format("X");
   var frequency = $('#frequency-input').val().trim();
+  var now = moment().format();
+  console.log("now: " + now);
   // push the value of the form to firebase database
-  database.ref("/user").push({
+  database.ref("/train-info").push({
     train: trainName,
     destination: destination,
     firstTime: firstTrainTime,
     frequency: frequency,
     dataAdded: firebase.database.ServerValue.TIMESTAMP,
   });
+
 });
 
 // Firebase watcher .on("child_added")
-database.ref("/user").on("child_added", function(snapshot) {
+database.ref("/train-info").on("child_added", function(snapshot) {
   var sv = snapshot.val();
   console.log(sv);
   var name = sv.train;
@@ -91,22 +108,60 @@ database.ref("/user").on("child_added", function(snapshot) {
   var destination = sv.destination;
   console.log("destination: " + destination);
   var firstTime = sv.firstTime;
-  console.log("firstTime String: " + firstTime);
-  var frequency = sv.frequency;
+  console.log("firstTime String: " + firstTime); // not an integer
+  // converting from unix epoch time to date and time
+  console.log("firstTime HH:mm: " + moment.unix(firstTime).format("MMMM Do YYYY, h:mm:ss a"));
+  var frequency = sv.frequency; // not an integer
   console.log("frequency String: " + frequency);
 
   var result = trainArrival(firstTime, frequency);
-  var minuteAway = result.tMinutes;
+  var minutesAway = result.tMinutes;
   var nextArrival = result.tArrival;
+  // updateTime(nextArrival, minutesAway);
 
-  renderTable(name, destination, nextArrival, frequency, minuteAway);
+  
+  // var y = frequency;
+  // function fits() {
+    
+  //   if (Number.isInteger(y / 10)) {
+  //     return 'Fits!';
+  //   }
+  //   return 'Does NOT fit!';
+  // }
+
+  // var fitz = fits(y / 10);
+  // console.log(fitz);
+
+  renderTable(name, destination, nextArrival, frequency, minutesAway);
 
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code)
 });
 
-// IT DOES NOT SEEM LIKE I NEED TO WIRTE PARAMETER INSIDE THE FUNCTION'S PARENTHESIS FOR NAME?
-// Is it because name was the only parameter? The code was broken once I try to include destination and other parameters.
+// function updateTime(nextArrival, minutesAway) {
+//   // A post entry.
+//   var postData = {
+//     nextArrival: nextArrival,
+//     minutesAway: minutesAway,
+//   };
+//   console.log("updateTime Data: " + postData);
+
+//   // Get a key for a new Post.
+//   // var newPostKey = firebase.database().ref().child('user').push().key;
+//   var newPostKey = database.ref("/user").push().key;
+//   console.log("newPostKey: " + newPostKey);
+
+//   // Write the new post's data simultaneously in the posts list and the user's post list.
+//   var updates = {};
+//   updates['/user/' + newPostKey] = postData;
+//   // updates['/user-posts/' + uid + '/' + newPostKey] = postData;
+//   console.log("updates: " + updates);
+
+//   return database.ref("/user").update(updates);
+// }
+
+// updateTime();
+
 function renderTable(name, destination, nextArrival, frequency, minuteAway) {
 
   $('#train-table tbody').append(`
@@ -125,27 +180,33 @@ function renderTable(name, destination, nextArrival, frequency, minuteAway) {
 // WHY IS THIS ONLY ADDING FREQUENCY TO FIRST TRAIN TIME ONCE? 
 function trainArrival(firstTime, frequency) {
 
-    // Calculate the minutes until arrival using hardcore math
-    // To calculate the minutes till arrival, take the current time in unix subtract the FirstTrain time
-    // and find the modulus between the difference and the frequency.
-    var timeArr = firstTime.split(":");
-    var trainTime = moment()
-    .hours(timeArr[0])
-    .minutes(timeArr[1]);
+  // Calculate the minutes until arrival using hardcore math
+  // To calculate the minutes till arrival, take the current time in unix subtract the FirstTrain time
+  // and find the modulus between the difference and the frequency.
+  var timeArr = firstTime.split(":");
+  var trainTime = moment()
+  .hours(timeArr[0])
+  .minutes(timeArr[1]);
 
-    // difference between current time (moment()) and trainTime in minutes 
-    var differenceTimes = moment().diff(trainTime, "minutes");
-    // the minutes away without the frequency
-    var tRemainder = differenceTimes % frequency;
-    tMinutes = frequency - tRemainder;
-    // To calculate the arrival time, add the tMinutes to the current time
-    var tArrival = moment()
-      .add(tMinutes, "m")
-      .format("hh:mm A");
+  // difference between current time (moment()) and trainTime in minutes 
+  var differenceTimes = moment().diff(trainTime, "minutes");
+  // the minutes away without the frequency
+  var tRemainder = differenceTimes % frequency;
+  tMinutes = frequency - tRemainder;
+  // To calculate the arrival time, add the tMinutes to the current time
+  var tArrival = moment()
+    .add(tMinutes, "m")
+    .format("hh:mm A");
 
-    return { tArrival, tMinutes }
+  return { tArrival, tMinutes }
 
+}
 
+function fits(x, y) {
+  if (Number.isInteger(y / x)) {
+    return 'Fits!';
+  }
+  return 'Does NOT fit!';
 }
 
 /*

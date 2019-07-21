@@ -72,6 +72,13 @@ body {
   border: 1px solid blue;
 }
 
+/* current time */
+#time-part {
+  text-align: center;
+  font-size: 32px;
+  color: teal;
+}
+
 /* form */
 .row-card-form {
   margin-top: 20px;

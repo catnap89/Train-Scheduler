@@ -68,16 +68,31 @@ $(document).ready(function() {
 
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
-  // declare database variable as database in firebase
-  let database = firebase.database();
+  // Declare database variable as database in firebase
+  var database = firebase.database();
 
 
-  //Run Clock  
+  // Run Clock  
   setInterval(function(){
     $('#time-part').html("Current Time: " + moment().format('hh:mm:ss A'))
   }, 1000);
       
+  // Run Train Scheduler
+  trainScheduler();
 
+  // TrainScheduler function
+  function trainScheduler() {
+    // Declare Variables
+    var editKey = ''; // variable to store reference key to firebase for editing correspond data
+    var now = moment();
+    var nextTrainTime; // next arrival time
+
+    $('#submit').on('click', function(evt) {
+      evt.preventDevault();
+      
+
+    })
+  }
 
 
 

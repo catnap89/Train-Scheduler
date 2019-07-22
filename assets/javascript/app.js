@@ -3,10 +3,10 @@ Psuedo Coding
 ===============
 
 # Form ID
-  * train-name-input
-  * destination-input
-  * time-input
-  * frequency-input
+  * trainName
+  * trainDestination
+  * firstTrainTime
+  * trainFrequency
   * submit
 
 # Table ID
@@ -88,13 +88,46 @@ $(document).ready(function() {
     var nextTrainTime; // next arrival time
 
     $('#submit').on('click', function(evt) {
-      evt.preventDevault();
+      evt.preventDefault();
+
+      // Grab input values
+      var trainName = $('#trainName').val().trim();
+      var trainDestination = $('#trainDestination').val().trim();
+      var firstTrainTime = moment($('#firstTrainTime').val().trim(), "HH:mm").format("X");
+      var frequency = $('#trainFrequency').val().trim();
       
+      // Using conditional statement to prevent data to be pushed to the database when not every form is filled
+      if (trainName != '' && trainDestination != '' && firstTrainTime != '' && frequency != '') {
+        // Clear form data
+        $('#trainName').val('');
+        $('#trainDestination').val('');
+        $('#firstTrainTime').val('');
+        $('#trainFrequency').val('');
 
+        now = moment().format("X");
+        // Push to firebase
+        if (editKey == '') { // If there is no editKey value
+          database.ref().child('trains').push({ // push the variables to the database in a child named 'trains'
+            trainName: trainName,
+            trainDestination: trainDestination,
+            firstTrainTime: firstTrainTime,
+            frequency: frequency,
+            currentTime: now,
+          })
+        } else if (editKey !== '') { // If there is editKey value
+          database.ref('trains/' + editKey).update({ // locate database with provided editKey value as it's unique key in 'trains' path and update database
+            trainName: trainName,
+            trainDestination:trainDestination,
+            firstTrainTime: firstTrainTime,
+            frequency: frequency,
+            currentTime: now,
+          })
+          editKey = ''; // empty the editKey value once else if conditional is met and database is updated
+        } 
+      }
     })
+
   }
-
-
 
 });
 

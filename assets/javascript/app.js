@@ -115,17 +115,36 @@ $(document).ready(function() {
             currentTime: now,
           })
         } else if (editKey !== '') { // If there is editKey value
-          database.ref('trains/' + editKey).update({ // locate database with provided editKey value as it's unique key in 'trains' path and update database
+          database.ref('trains/' + editKey).update({ // Locate database with provided editKey value as it's unique key in 'trains' path and update database
             trainName: trainName,
             trainDestination:trainDestination,
             firstTrainTime: firstTrainTime,
             frequency: frequency,
             currentTime: now,
           })
-          editKey = ''; // empty the editKey value once else if conditional is met and database is updated
+          editKey = ''; // Empty the editKey value once else if conditional is met and database is updated
         } 
       }
-    })
+    }); // on click submit function end
+
+    // Update minutes away by triggering change in firebase children
+    function timeUpdate() {
+      database.ref().child('trains').once('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+
+          now = moment().format('X');
+          database.ref('trains/' + childSnapshot.key).update({
+            currentTime: now,
+          })
+        })
+      })
+    };
+
+    setInterval(timeUpdate, 10000);
+
+    
+
+
 
   }
 

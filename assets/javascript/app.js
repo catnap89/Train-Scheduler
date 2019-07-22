@@ -39,175 +39,201 @@ Psuedo Coding
   * use Moment.js
 
 #  updating your "minutes to arrival" and "next train time" text once every minute.
+  * when trainArrival function is called, push updated tArrival, tMinutes into firebase database and on the related child -- HOW?
+  * need to know how to access specific td in tr of a dynamically created table to change it's value
+  * 
 
 # Try adding `update` and `remove` buttons for each train. Let the user edit the row's elements-- 
   allow them to change a train's Name, Destination and Arrival Time (and then, by relation, minutes to arrival).
+
 
 # authentication
 
 
 */
 
-
-// Your web app's Firebase configuration
-var firebaseConfig = {
-  apiKey: "AIzaSyBhzeruTvl8oo5ZCK8rORRvplM1k9TACEs",
-  authDomain: "train-scheduler-b4346.firebaseapp.com",
-  databaseURL: "https://train-scheduler-b4346.firebaseio.com",
-  projectId: "train-scheduler-b4346",
-  storageBucket: "train-scheduler-b4346.appspot.com",
-  messagingSenderId: "626876163024",
-  appId: "1:626876163024:web:dd1b867e654cdc55"
-};
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-// declare database variable as database in firebase
-let database = firebase.database();
-
-// clock displaying current time 
 $(document).ready(function() {
-    var interval = setInterval(function() {
-      
-        var now = moment();
-        $('#time-part').html("Current Time: " + now.format('hh:mm:ss A'));
 
-    }, 100);
-    
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyBhzeruTvl8oo5ZCK8rORRvplM1k9TACEs",
+    authDomain: "train-scheduler-b4346.firebaseapp.com",
+    databaseURL: "https://train-scheduler-b4346.firebaseio.com",
+    projectId: "train-scheduler-b4346",
+    storageBucket: "train-scheduler-b4346.appspot.com",
+    messagingSenderId: "626876163024",
+    appId: "1:626876163024:web:dd1b867e654cdc55"
+  };
+
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  // declare database variable as database in firebase
+  let database = firebase.database();
+
+
+  //Run Clock  
+  setInterval(function(){
+    $('#time-part').html("Current Time: " + moment().format('hh:mm:ss A'))
+  }, 1000);
+      
+
+
+
+
 });
 
 
-// on click function when submit button is clicked: get value from the form and push it to firebase database's user reference
-$('#submit').on("click", function(event) {
-  event.preventDefault();
+/*
 
-  var trainName = $('#train-name-input').val().trim();
-  var destination = $('#destination-input').val().trim();
-  // change the time input string value as moment.js time format (milliseconds from unix epoch without years)
-  // why is it subtracting 10 years?
-  var firstTrainTime = moment($('#time-input').val().trim(), "HH:mm").subtract(10, "years").format("X");
-  var frequency = $('#frequency-input').val().trim();
-  var now = moment().format();
-  console.log("now: " + now);
-  // push the value of the form to firebase database
-  database.ref("/train-info").push({
-    train: trainName,
-    destination: destination,
-    firstTime: firstTrainTime,
-    frequency: frequency,
-    dataAdded: firebase.database.ServerValue.TIMESTAMP,
+  // on click function when submit button is clicked: get value from the form and push it to firebase database's user reference
+  $('#submit').on("click", function(event) {
+    event.preventDefault();
+
+    var trainName = $('#train-name-input').val().trim();
+    var destination = $('#destination-input').val().trim();
+    // change the time input string value as moment.js time format (milliseconds from unix epoch without years)
+    // why is it subtracting 10 years?
+    // var firstTrainTime = moment($('#time-input').val().trim(), "HH:mm").subtract(10, "years").format("X");
+    var firstTrainTime = moment($('#time-input').val().trim(), "HH:mm").format("X");
+    var frequency = $('#frequency-input').val().trim();
+    var now = moment().format();
+    console.log("now: " + now);
+    // push the value of the form to firebase database  
+    database.ref("/train-info").push({
+      train: trainName,
+      destination: destination,
+      firstTime: firstTrainTime,
+      frequency: frequency,
+      dataAdded: firebase.database.ServerValue.TIMESTAMP,
+    });
+
   });
 
-});
+  // database.ref("/train-info").on("value", function(snapshot) {
+  //   console.log("snaaaaapSHOT", snapshot.val())
+  //   //in this method, we need to update 
+  // });
 
-// Firebase watcher .on("child_added")
-database.ref("/train-info").on("child_added", function(snapshot) {
-  var sv = snapshot.val();
-  console.log(sv);
-  var name = sv.train;
-  console.log("train: " + name);
-  var destination = sv.destination;
-  console.log("destination: " + destination);
-  var firstTime = sv.firstTime;
-  console.log("firstTime String: " + firstTime); // not an integer
-  // converting from unix epoch time to date and time
-  console.log("firstTime HH:mm: " + moment.unix(firstTime).format("MMMM Do YYYY, h:mm:ss a"));
-  var frequency = sv.frequency; // not an integer
-  console.log("frequency String: " + frequency);
+  // Firebase watcher .on("child_added")
+  database.ref("/train-info").on("child_added", function(snapshot) {
+    var sv = snapshot.val();
+    console.log(sv);
+    var name = sv.train;
+    console.log("train: " + name);
+    var destination = sv.destination;
+    console.log("destination: " + destination);
+    var firstTime = sv.firstTime;
+    console.log("firstTime String: " + firstTime); // not an integer
+    // converting from unix epoch time to date and time
+    console.log("firstTime HH:mm: " + moment.unix(firstTime).format("MMMM Do YYYY, h:mm:ss a"));
+    var frequency = sv.frequency; // not an integer
+    console.log("frequency String: " + frequency);
 
-  var result = trainArrival(firstTime, frequency);
-  var minutesAway = result.tMinutes;
-  var nextArrival = result.tArrival;
-  // updateTime(nextArrival, minutesAway);
-
+    // IS THERE A WAY TO RUN RESULT? IN SET INTEVERL?
+    var result = trainArrival(firstTime, frequency);
   
-  // var y = frequency;
-  // function fits() {
+    var minutesAway = result.tMinutes;
+    var nextArrival = result.tArrival;
     
-  //   if (Number.isInteger(y / 10)) {
-  //     return 'Fits!';
-  //   }
-  //   return 'Does NOT fit!';
+    renderTable(name, destination, nextArrival, frequency, minutesAway);
+
+
+  }, function (errorObject) {
+    console.log("The read failed: " + errorObject.code)
+  });
+
+
+
+  // function updateTime(nextArrival, minutesAway) {
+  //   // A post entry.
+  //   var postData = {
+  //     nextArrival: nextArrival,
+  //     minutesAway: minutesAway,
+  //   };
+  //   console.log("updateTime Data: " + postData);
+
+  //   // Get a key for a new Post.
+  //   // var newPostKey = firebase.database().ref().child('user').push().key;
+  //   var newPostKey = database.ref("/user").push().key;
+  //   console.log("newPostKey: " + newPostKey);
+
+  //   // Write the new post's data simultaneously in the posts list and the user's post list.
+  //   var updates = {};
+  //   updates['/user/' + newPostKey] = postData;
+  //   // updates['/user-posts/' + uid + '/' + newPostKey] = postData;
+  //   console.log("updates: " + updates);
+
+  //   return database.ref("/user").update(updates);
   // }
 
-  // var fitz = fits(y / 10);
-  // console.log(fitz);
+  // updateTime();
 
-  renderTable(name, destination, nextArrival, frequency, minutesAway);
 
-}, function (errorObject) {
-  console.log("The read failed: " + errorObject.code)
-});
 
-// function updateTime(nextArrival, minutesAway) {
-//   // A post entry.
-//   var postData = {
-//     nextArrival: nextArrival,
-//     minutesAway: minutesAway,
-//   };
-//   console.log("updateTime Data: " + postData);
+  function renderTable(name, destination, nextArrival, frequency, minutesAway) {
 
-//   // Get a key for a new Post.
-//   // var newPostKey = firebase.database().ref().child('user').push().key;
-//   var newPostKey = database.ref("/user").push().key;
-//   console.log("newPostKey: " + newPostKey);
+    $('#train-table tbody').append(`
+    <tr>
+      <td>${name}</td>
+      <td>${destination}</td>
+      <td>${frequency}</td>
+      <td>${nextArrival}</td>
+      <td>${minutesAway}</td>
+    </tr>
+  `);
 
-//   // Write the new post's data simultaneously in the posts list and the user's post list.
-//   var updates = {};
-//   updates['/user/' + newPostKey] = postData;
-//   // updates['/user-posts/' + uid + '/' + newPostKey] = postData;
-//   console.log("updates: " + updates);
-
-//   return database.ref("/user").update(updates);
-// }
-
-// updateTime();
-
-function renderTable(name, destination, nextArrival, frequency, minuteAway) {
-
-  $('#train-table tbody').append(`
-  <tr>
-    <td>${name}</td>
-    <td>${destination}</td>
-    <td>${frequency}</td>
-    <td>${nextArrival}</td>
-    <td>${minuteAway}</td>
-  </tr>
-`);
-
-}
-// var nowMilitaryTime = moment().format("HH mm ss A"); // current time in millitary time
-
-// WHY IS THIS ONLY ADDING FREQUENCY TO FIRST TRAIN TIME ONCE? 
-function trainArrival(firstTime, frequency) {
-
-  // Calculate the minutes until arrival using hardcore math
-  // To calculate the minutes till arrival, take the current time in unix subtract the FirstTrain time
-  // and find the modulus between the difference and the frequency.
-  var timeArr = firstTime.split(":");
-  var trainTime = moment()
-  .hours(timeArr[0])
-  .minutes(timeArr[1]);
-
-  // difference between current time (moment()) and trainTime in minutes 
-  var differenceTimes = moment().diff(trainTime, "minutes");
-  // the minutes away without the frequency
-  var tRemainder = differenceTimes % frequency;
-  tMinutes = frequency - tRemainder;
-  // To calculate the arrival time, add the tMinutes to the current time
-  var tArrival = moment()
-    .add(tMinutes, "m")
-    .format("hh:mm A");
-
-  return { tArrival, tMinutes }
-
-}
-
-function fits(x, y) {
-  if (Number.isInteger(y / x)) {
-    return 'Fits!';
   }
-  return 'Does NOT fit!';
-}
+
+
+  function trainArrival(firstTime, frequency) {
+
+    // Calculate the minutes until arrival using hardcore math
+    // To calculate the minutes till arrival, take the current time in unix subtract the FirstTrain time
+    // and find the modulus between the difference and the frequency.
+    var timeArr = firstTime.split(":");
+    console.log("First Time Split in Array: " + timeArr);
+    console.log("first time Array HH:mm : " + moment.unix(timeArr).format("MMMM Do YYYY, h:mm:ss a"));
+    var trainTime = moment()
+    .hours(timeArr[0])
+    .minutes(timeArr[1]);
+    console.log("Train Time: " + trainTime);
+    console.log("train time in HH:mm : " + moment.unix(trainTime).format("MMMM Do YYYY, h:mm:ss a"));
+    // difference between current time (moment()) and trainTime in minutes 
+    var differenceTimes = moment().diff(trainTime, "minutes");
+    console.log("Delta of current time and first train time: " + differenceTimes);
+    // the minutes away without the frequency
+    var tRemainder = differenceTimes % frequency;
+    console.log("Minutes Away without the frequency: " + tRemainder);
+    tMinutes = frequency - tRemainder;
+    console.log("Minutes Away: " + tMinutes);
+    // To calculate the arrival time, add the tMinutes to the current time
+    var tArrival = moment()
+      .add(tMinutes, "m")
+      .format("hh:mm A");
+    
+    // console.log("Schedule Data: " + JSON.stringify(scheduleData));
+
+    return { tArrival, tMinutes }
+
+  }
+
+  function updateTable(name, destination, frequency, scheduleData) {
+
+    $('#train-table tbody').html(`
+    <tr>
+      <td>${name}</td>
+      <td>${destination}</td>
+      <td>${frequency}</td>
+      <td>${scheduleData.nextArrival}</td>
+      <td>${scheduleData.minuteAway}</td>
+    </tr>
+  `);
+  }
+
+
+
+*/
 
 /*
 
@@ -474,3 +500,4 @@ function trainArrival(firstTime, frequency) {
 // }
 
 */
+

@@ -142,13 +142,68 @@ $(document).ready(function() {
 
     setInterval(timeUpdate, 10000);
 
-    
+    // Reference Firebase when page loads and train added
+    database.ref().child('trains').on('value', function(snapshot) {
+      $('tbody').empty(); // empty table
+
+      snapshot.forEach(function(childSnapshot) {
+        var trainClass = childSnapshot.key;
+        var trainId = childSnapshot.val();
+        var firstTimeUnix = moment.unix(trainId.firstTrainTime);
+        var timeDiff = moment.diff(moment(firstTimeUnix, 'HH:mm'), 'minutes');
+        var timeDiffCalc = timeDiff % parseInt(train.Id.frequency);
+        var timeDiffTotal = parseInt(trainId.frequency) - timeDiffCalc; // this is minutes away
+
+        if (timeDiff >= 0) { // If current time is more future or at the same time of the first train time,
+          nextTrainTime = null; // set nextTrainTime's value as null
+          nextTrainTime = moment.add(timeDiffTotal, 'minutes').format('hh:mm A'); // current time + minutes away is next train time
+        } else {
+          nextTrainTime = null;
+          nextTrainTime = firstTimeUnix.format("hh:mm A");
+          timeDiffTotal = Math.abs(timeDiff - 1);
+        }
+
+        $('tbody').append(`
+          <tr class="${trainClass}">
+            <td>${trainId.trainName}</td>
+            <td>${trainId.trainDestination}</td>
+            <td>${trainId.frequency}</td>
+            <td>${nextTrainTime}</td>
+            <td>${timeDiffTotal}</td>
+            <td><button class='edit btn' data-train="${trainClass}"><i class='glyphicon glyphicon-pencil'></i></button></td>
+            <td><button class='delete btn' data-train="${trainClass}"><i class='glyphicon glyphicon-remove'></i></button></td>
+          </tr>
+        `)
+      })
+
+    }, function(errorObject) {
+      console.log("The read failed: " + errorObject.code);
+    });
+
+    // Reference firebase when children are updated
+    database.ref().child('trains').on('child_changed', function(childSnapshot) {
+
+      var trainClass = childSnapshot.key;
+      var trainId = childSnapshot.val();
+      var firstTimeUnix = moment.unix(trainId.firstTrainTime);
+      var timeDiff = moment.diff(moment(firstTimeUnix, 'HH:mm'), 'minutes');
+      var timeDiffCalc = timeDiff % parseInt(train.Id.frequency);
+      var timeDiffTotal = parseInt(trainId.frequency) - timeDiffCalc; // this is minutes away
+
+      if (timeDiff > 0) {
+        nextTrainTime = moment.add(timeDiffTotal, 'minutes').format("hh:mm A");
+      } else {
+        nextTrainTime = firstTimeUnix.format
+      }
+
+
+    })
 
 
 
-  }
+  } // Trainscheduler end
 
-});
+}); // Document.ready end
 
 
 /*

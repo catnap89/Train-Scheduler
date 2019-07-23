@@ -34,7 +34,7 @@
   * The newly inputted information will update the existing data in the database instead of adding new set of data
   * The changes will be displayed in the table upon clicking submit button
 
-## To remove existing information about a train
+### To remove existing information about a train
   * Click the button under **Remove**
   
 

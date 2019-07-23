@@ -151,4 +151,8 @@ th {
 }
 
 
-
+@media only screen and (max-width: 767px) {
+    .col-form {
+      margin-bottom: 20px;
+    }
+}

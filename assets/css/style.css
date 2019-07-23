@@ -59,7 +59,6 @@ body {
 
 /* Jumbotron */
 .row-jumbotron {
-  border: 1px solid red;
   margin-top: 100px;
 }
 
@@ -69,7 +68,9 @@ body {
 }
 
 .jumbotron-fluid {
-  border: 1px solid blue;
+  background-image: url("../images/train_scheduler.jpg");
+  background-size: 100% 100%;
+  /* background-repeat: no-repeat; */
 }
 
 /* current time */

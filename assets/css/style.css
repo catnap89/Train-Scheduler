@@ -97,7 +97,7 @@ th {
 
 /* button */
 
-.btn {
+#submit {
   background: #ff5252;
   color: #fff;
   border: 2px solid #dddddd;
@@ -105,6 +105,37 @@ th {
   transition-timing-function: ease-in-out;
   transition-property: all;
 }
+
+.edit {
+  background: #ff5252;
+  color: #fff;
+  border: 2px solid #dddddd;
+  transition-duration: 1s;
+  transition-timing-function: ease-in-out;
+  transition-property: all;
+}
+
+.delete {
+  background: #ff5252;
+  color: #fff;
+  border: 2px solid #dddddd;
+  transition-duration: 1s;
+  transition-timing-function: ease-in-out;
+  transition-property: all;
+}
+
+.btn-next-arrival {
+  width: 30x;
+  height: auto;
+  color: white;
+}
+
+.btn-minutes-away {
+  width: 30x;
+  height: auto;
+  color: white;
+}
+
 
 
 /* Footer */

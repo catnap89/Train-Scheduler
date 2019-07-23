@@ -2,7 +2,14 @@
 
 ## Overview
 
-**Train-Scheduler** is a web application that takes in user input about a train (train name, destination, first train time, and frequency)and displays the following information about the train: train name, destination, frequency, next arrival, minutes away. Next arrival and minutes away are automatically calculated as current time passes and up-to-date information is displayed without having to refresh the page.
+**Train-Scheduler** is a web application that takes in user input about a train (train name, destination, first train time, and frequency) and displays the following information about the train:
+  * train name
+  * destination
+  * frequency
+  * next arrival
+  * minutes away
+Next arrival and minutes away are automatically calculated as current time passes.
+Up-to-date informations about the trains are displayed without having to refresh the page.
 
 
 ## How To Use the App

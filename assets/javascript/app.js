@@ -228,7 +228,10 @@ $(document).ready(function() {
     })
 
     $(document).on('click', '.delete', function() {
-      
+      var editKey = $(this).attr('data-train');
+      database.ref('trains/' + editKey).remove();
+      $('.' + editKey).remove();
+
     })
 
 

@@ -8,8 +8,9 @@
   * frequency
   * next arrival
   * minutes away
-Next arrival and minutes away are automatically calculated as current time passes.
-Up-to-date informations about the trains are displayed without having to refresh the page.
+
+##### Next arrival and minutes away are automatically calculated as current time passes.
+##### Up-to-date informations about the trains are displayed without having to refresh the page.
 
 
 ## How To Use the App

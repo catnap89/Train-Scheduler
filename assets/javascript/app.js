@@ -170,8 +170,8 @@ $(document).ready(function() {
             <td>${trainId.frequency}</td>
             <td>${nextTrainTime}</td>
             <td>${timeDiffTotal}</td>
-            <td><button class='edit btn' data-train="${trainClass}"><i class="fas fa-stream"></i></button></td>
-            <td><button class='delete btn' data-train="${trainClass}"><i class="fas fa-window-close"></i></i></button></td>
+            <td><button class='edit btn' data-train="${trainClass}"><i class="fas fa-edit"></i></button></td>
+            <td><button class='delete btn' data-train="${trainClass}"><i class="fas fa-window-close"></i></button></td>
           </tr>
         `)
       })
@@ -204,8 +204,8 @@ $(document).ready(function() {
           <td>${trainId.frequency}</td>
           <td>${nextTrainTime}</td>
           <td>${timeDiffTotal}</td>
-          <td><button class='edit btn' data-train="${trainClass}"><i class='glyphicon glyphicon-pencil'></i></button></td>
-          <td><button class='delete btn' data-train="${trainClass}"><i class='glyphicon glyphicon-remove'></i></button></td>
+          <td><button class='edit btn' data-train="${trainClass}"><i class="fas fa-edit"></i></button></td>
+          <td><button class='delete btn' data-train="${trainClass}"><i class="fas fa-window-close"></i></button></td>
         `)
     }, function(errorObject) {
       console.log("The read failed: " + errorObject.code);

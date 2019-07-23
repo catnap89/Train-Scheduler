@@ -4,12 +4,13 @@ html {
 
 body {
   height: 100%;
+  /* background-color: black; */
 }
 
 
 .container-fluid {
   height: 100%;
-  /* background-image: url("../images/background-gif1.gif"); */
+  background-image: url("../images/train1.jpg");
   background-size: cover;
   overflow: auto;
 }
@@ -65,12 +66,14 @@ body {
 
 .container-jumbotron-title {
   text-align: center;
+  color: white;
 }
 
 .jumbotron-fluid {
-  background-image: url("../images/train_scheduler.jpg");
-  background-size: 100% 100%;
+  /* background-image: url("../images/train_scheduler.jpg"); */
+  /* background-size: 100% 100%; */
   /* background-repeat: no-repeat; */
+  background-color: transparent;
 }
 
 /* current time */

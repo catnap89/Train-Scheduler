@@ -190,11 +190,11 @@ $(document).ready(function() {
       var timeDiffCalc = timeDiff % parseInt(trainId.frequency);
       var timeDiffTotal = parseInt(trainId.frequency) - timeDiffCalc; // this is minutes away
 
-      if (timeDiff > 0) { // I think this has to be >= 0 since when currentt time is next train time, I want to show the
-        // keep adding minutes away to current time, it is not going to change next arrival because minutes away will decrease as current time increases. 
+      if (timeDiff >= 0) { // I think this has to be >= 0 since when currentt time is next train time, I want to show the next train time in future.
+        // Add min away to current time if curren time is at the same time or in the future compared to first train time to show next train arrival time
         nextTrainTime = moment().add(timeDiffTotal, 'minutes').format("hh:mm A"); 
       } else {
-        nextTrainTime = firstTimeUnix.format("hh:mm A");
+        nextTrainTime = firstTimeUnix.format("hh:mm A"); // next train time is in the future, show the next train time.
         timeDiffTotal = Math.abs(timeDiff - 1);
       }
       // Select table row with the corresponding trainclass as it's class and change it's table data.

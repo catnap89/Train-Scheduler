@@ -15,10 +15,6 @@ body {
 }
 
 /* Navbar */
-/* .row-navbar {
-  border: 1px solid yellow;
-
-} */
 
 .navbar {
   padding: 0;
@@ -57,13 +53,17 @@ body {
   padding: 10px; 
 }
 
+/* Contents Container */
+.row-contents-container {
+  margin-top: 10px;
+  margin-bottom: 100px;
+}
 /* Jumbotron */
 .row-jumbotron {
   margin-top: 100px;
 }
 
 .container-jumbotron-title {
-  border: 1px solid teal;
   text-align: center;
 }
 
@@ -77,14 +77,10 @@ body {
 #time-part {
   text-align: center;
   font-size: 32px;
-  color: teal;
+  color: white;
 }
 
 /* form */
-.row-card-form {
-  margin-top: 20px;
-  margin-bottom: 100px;
-}
 
 /* table */
 
@@ -97,6 +93,15 @@ th {
 }
 
 /* button */
+
+.btn {
+  background: #ff5252;
+  color: #fff;
+  border: 2px solid #dddddd;
+  transition-duration: 1s;
+  transition-timing-function: ease-in-out;
+  transition-property: all;
+}
 
 
 /* Footer */

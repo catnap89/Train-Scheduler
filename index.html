@@ -66,113 +66,99 @@
     <!-- main content -->
     <!-- jumbotron -->
     <div class="row row-jumbotron">
-      <div class="col-md-8 offset-md-2">
+      <div class="col-md-12">
 
         <div class="jumbotron jumbotron-fluid">
           <div class="container container-jumbotron-title">
             <h1 class="display-4">Any Time Is Train Time</h1>
             <p class="lead">choo choo chee chee</p>
           </div>
-        </div>
-
-      </div>
-    </div> <!-- row end -->
-
-    <div class="row">
-      <div class="col-md-8 offset-md-2">
-
-        <div class="time-frame">
-          <h1 id="time-part">
-            
-          </h1>
+          <div class="time-frame">
+            <h1 id="time-part"></h1>
+          </div>
         </div>
 
       </div>
     </div> <!-- row end -->
 
     <div class="row row-table-schedule">
-      <div class="col-md-8 offset-md-2">
+      <div class="col-md-4">
 
-        <div class="card">
-          <div class="card-header">
-            Current Train Schedule
-          </div>
-          <!-- <div class="card-body"> -->
-            <!-- mobile responsive div containing table -->
-            <div class="table-responsive">
+          <div class="card">
+            <div class="card-header">
+              Add Train Info
+            </div>
+            <!-- * Train Name  * Destination * First Train Time -- in military time * Frequency -- in minutes -->
+            <form class="needs-validation" novalidate>
+              <div class="form-group row font-weight-bold mt-3 ml-3 mr-3">
+                  <label for="name-input" class="col-12 col-form-label">Train Name</label>
+                  <div class="col-12">
+                      <input class="form-control" type="name" placeholder="" id="trainName">
+                  </div>
+              </div>
+              <div class="form-group row font-weight-bold ml-3 mr-3">
+                  <label for="inputCity" class="col-12 col-form-label">Destination</label>
+                  <div class="col-12">
+                      <input class="form-control" type="text" placeholder="City" id="trainDestination">
+                  </div>
+              </div>
+              <div class="form-group row font-weight-bold ml-3 mr-3">
+                  <label for="time-input" class="col-12 col-form-label">First Train Time</label>
+                  <div class="col-12">
+                      <input class="form-control" type="time" placeholder="HH:mm - military time" id="firstTrainTime">
+                  </div>
+              </div>
+              <div class="form-group row font-weight-bold ml-3 mr-3">
+                  <label for= "train-frequency-input" class="col-12 col-form-label">Frequency (min)</label>
+                  <div class="col-12">
+                      <input class="form-control" type="number" placeholder="min" id="trainFrequency">
+                  </div>
+              </div>
+              <div class="form-group row ml-3 mr-3">
+                  <div class="col-12 d-flex justify-content-end">
+                      <button id="submit" type="button" class="btn btn-primary btn-sm">Submit</button> 
+                  </div>
+              </div>
+            </form>
+          </div>  <!-- card end-->
+      </div>
 
-              <table class="table table-hover table-striped" id="train-table">
-                <thead>
-                  <tr>
-                    <th scope="col">Train Name</th>
-                    <th scope="col">Destination</th>
-                    <th scope="col">Frequency (min)</th>
-                    <th scope="col">Next Arrival</th>
-                    <th scope="col">Minutes Away</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Remove</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- display dynamically created table with data retrieved from firebase -->
-                   <!-- <tr>
-                    <th scope="row">Train Name</th>
-                    <td>Destination</td>
-                    <td>Frequency (min)</td>
-                    <td>Next Arrival</td>
-                    <td>Minutes Away</td>
-                  </tr> -->
-                </tbody>
-              </table>
+      <div class="col-md-8">
 
+          <div class="card">
+            <div class="card-header">
+              Current Train Schedule
             </div>
 
-          <!-- </div> -->
-        </div>
+              <div class="table-responsive">
 
+                <table class="table table-hover table-striped" id="train-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Train Name</th>
+                      <th scope="col">Destination</th>
+                      <th scope="col">Frequency (min)</th>
+                      <th scope="col">Next Arrival</th>
+                      <th scope="col">Minutes Away</th>
+                      <th scope="col">Edit</th>
+                      <th scope="col">Remove</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                  </tbody>
+                </table>
+
+              </div>
+
+          </div> <!-- card end-->
       </div>
-    </div> <!-- row end -->
+    </div> <!-- row end // -->
 
     <div class="row row-card-form">
       <div class="col-md-8 offset-md-2">
 
-        <div class="card">
-          <div class="card-header">
-            Add Train Info
-          </div>
-          <!-- * Train Name  * Destination * First Train Time -- in military time * Frequency -- in minutes -->
-          <form class="needs-validation" novalidate>
-            <div class="form-group row font-weight-bold mt-3 ml-3 mr-3">
-                <label for="name-input" class="col-12 col-form-label">Train Name</label>
-                <div class="col-12">
-                    <input class="form-control" type="name" placeholder="" id="trainName">
-                </div>
-            </div>
-            <div class="form-group row font-weight-bold ml-3 mr-3">
-                <label for="inputCity" class="col-12 col-form-label">Destination</label>
-                <div class="col-12">
-                    <input class="form-control" type="text" placeholder="City" id="trainDestination">
-                </div>
-            </div>
-            <div class="form-group row font-weight-bold ml-3 mr-3">
-                <label for="time-input" class="col-12 col-form-label">First Train Time</label>
-                <div class="col-12">
-                    <input class="form-control" type="time" placeholder="HH:mm - military time" id="firstTrainTime">
-                </div>
-            </div>
-            <div class="form-group row font-weight-bold ml-3 mr-3">
-                <label for= "train-frequency-input" class="col-12 col-form-label">Frequency (min)</label>
-                <div class="col-12">
-                    <input class="form-control" type="number" placeholder="min" id="trainFrequency">
-                </div>
-            </div>
-            <div class="form-group row ml-3 mr-3">
-                <div class="col-12 d-flex justify-content-end">
-                    <button id="submit" type="button" class="btn btn-primary btn-sm">Submit</button> 
-                </div>
-            </div>
-          </form>
-        </div>
+
 
       </div>
     </div>
